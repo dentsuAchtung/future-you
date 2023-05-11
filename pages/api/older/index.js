@@ -1,11 +1,4 @@
 import Replicate from "replicate";
-import multer from 'multer';
-import sharp from 'sharp';
-import formidable from 'formidable';
-import fs from 'fs';
-import path from 'path';
-
-const upload = multer({ dest: 'uploads/' });
 
 const replicate = new Replicate({
   auth: process.env.REPLICATE_API_TOKEN,
