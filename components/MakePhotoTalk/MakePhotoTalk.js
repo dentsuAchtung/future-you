@@ -70,7 +70,7 @@ function MakePhotoTalk({ agedPhoto, onComplete }) {
       {prediction ? (
         <div>
           <p className="py-3 text-sm opacity-50">status: {prediction.status}</p>
-          {prediction.status === 'processing' || prediction.status === 'starting' && <Loader />}
+          {(prediction.status === 'processing' || prediction.status === 'starting') && <Loader />}
         </div>
       ) : (
 
