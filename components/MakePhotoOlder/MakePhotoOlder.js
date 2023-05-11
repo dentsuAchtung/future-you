@@ -58,15 +58,10 @@ function MakePhotoOlder({ onComplete }) {
     const file = event.target.files[0];
 
     const reader = new FileReader();
-    reader.onloadend = (event) => {
-      const img = new Image();
-      img.onload = function() {
-        const image = resizeImage(img, 256, 256);
-
-        const jsonData = JSON.stringify({ image: image });
-        uploadFile(jsonData);
-      };
-      img.src = event.target.result;
+    reader.onloadend = () => {
+      const dataUri = reader.result;
+      const jsonData = JSON.stringify({ image: dataUri });
+      uploadFile(jsonData);
     };
     reader.readAsDataURL(file);
   };
@@ -93,7 +88,7 @@ function MakePhotoOlder({ onComplete }) {
           )}
           <div>
             <p className="py-3 text-sm opacity-50">status: {prediction.status}</p>
-            {prediction.status !== 'processing' && <Loader />}
+            {prediction.status === 'processing' || prediction.status === 'starting' && <Loader />}
           </div>
         </>
       ) : (
