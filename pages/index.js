@@ -1,6 +1,7 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import Head from "next/head";
 import Image from "next/image";
+import FileUpload from "../components/FileUpload/FileUpload";
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -8,16 +9,14 @@ export default function Home() {
   const [prediction, setPrediction] = useState(null);
   const [error, setError] = useState(null);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const response = await fetch("/api/predictions", {
+  const uploadFile = async (jsonData) => {
+    console.log(jsonData);
+    const response = await fetch("/api/older", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        prompt: e.target.prompt.value,
-      }),
+      body: jsonData
     });
     let prediction = await response.json();
     if (response.status !== 201) {
@@ -31,7 +30,7 @@ export default function Home() {
       prediction.status !== "failed"
     ) {
       await sleep(1000);
-      const response = await fetch("/api/predictions/" + prediction.id);
+      const response = await fetch("/api/older/" + prediction.id);
       prediction = await response.json();
       if (response.status !== 200) {
         setError(prediction.detail);
@@ -41,47 +40,51 @@ export default function Home() {
       setPrediction(prediction);
     }
   };
+  const handleFileSelect = (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const dataUri = reader.result;
+      const jsonData = JSON.stringify({ image: dataUri });
+      uploadFile(jsonData);
+    };
+    reader.readAsDataURL(file);
+  };
 
   return (
     <div className="container max-w-2xl mx-auto p-5">
       <Head>
-        <title>Replicate + Next.js</title>
+        <title>Future You</title>
       </Head>
 
       <h1 className="py-6 text-center font-bold text-2xl">
-        Dream something with{" "}
-        <a href="https://replicate.com/stability-ai/stable-diffusion">
-          Stable Diffusion
-        </a>
+        Future you
       </h1>
-
-      <form className="w-full flex" onSubmit={handleSubmit}>
-        <input
-          type="text"
-          className="flex-grow"
-          name="prompt"
-          placeholder="Enter a prompt to display an image"
-        />
-        <button className="button" type="submit">
-          Go!
-        </button>
-      </form>
 
       {error && <div>{error}</div>}
 
-      {prediction && (
+      {prediction ? (
         <>
           {prediction.output && (
             <div className="image-wrapper mt-5">
               <Image
                 fill
-                src={prediction.output[prediction.output.length - 1]}
+                src={prediction.output}
                 alt="output"
                 sizes="100vw"
               />
             </div>
           )}
           <p className="py-3 text-sm opacity-50">status: {prediction.status}</p>
+        </>
+      ) : (
+        <>
+
+          <p>Start by uploading your photo</p>
+
+          <div className="w-full flex">
+            <input type="file" onChange={handleFileSelect} />
+          </div>
         </>
       )}
     </div>

@@ -1,8 +1,16 @@
 import Replicate from "replicate";
+import multer from 'multer';
+import sharp from 'sharp';
+import formidable from 'formidable';
+import fs from 'fs';
+import path from 'path';
+
+const upload = multer({ dest: 'uploads/' });
 
 const replicate = new Replicate({
   auth: process.env.REPLICATE_API_TOKEN,
 });
+
 
 export default async function handler(req, res) {
   if (!process.env.REPLICATE_API_TOKEN) {
@@ -12,12 +20,10 @@ export default async function handler(req, res) {
   }
 
   const prediction = await replicate.predictions.create({
-    // Pinned to a specific version of Stable Diffusion
-    // See https://replicate.com/stability-ai/stable-diffusion/versions
-    version: "db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf",
+    version: "9222a21c181b707209ef12b5e0d7e94c994b58f01c7b2fec075d2e892362f13c",
 
     // This is the text prompt that will be submitted by a form on the frontend
-    input: { prompt: req.body.prompt },
+    input: {image: req.body.image, target_age: '45'},
   });
 
   if (prediction?.error) {
