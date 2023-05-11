@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import NextImage from "next/image";
+import Loader from "../Loader/Loader";
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -72,7 +73,7 @@ function MakePhotoOlder({ onComplete }) {
 
   useEffect(() => {
     if (prediction?.output) onComplete(prediction.output)
-  }, [prediction?.output])
+  }, [prediction?.output, onComplete])
 
   return (
     <div className="text-center">
@@ -90,7 +91,10 @@ function MakePhotoOlder({ onComplete }) {
               />
             </div>
           )}
-          <p className="py-3 text-sm opacity-50">status: {prediction.status}</p>
+          <div>
+            <p className="py-3 text-sm opacity-50">status: {prediction.status}</p>
+            {prediction.status !== 'processing' && <Loader />}
+          </div>
         </>
       ) : (
         <>

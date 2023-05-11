@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import NextImage from "next/image";
+import Loader from "../Loader/Loader";
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -50,7 +51,7 @@ function MakePhotoTalk({ agedPhoto, onComplete }) {
 
   useEffect(() => {
     if (prediction?.output) onComplete(prediction.output)
-  }, [prediction?.output])
+  }, [prediction?.output, onComplete])
 
   return (
     <div className="text-center">
@@ -66,18 +67,23 @@ function MakePhotoTalk({ agedPhoto, onComplete }) {
         />
       </div>
 
-      {prediction ? (<p className="py-3 text-sm opacity-50">status: {prediction.status}</p>) : (
+      {prediction ? (
+        <div>
+          <p className="py-3 text-sm opacity-50">status: {prediction.status}</p>
+          {prediction.status !== 'processing' && <Loader/>}
+        </div>
+      ) : (
 
         <div className="mt-5">
           <p>Upload audio of your voice</p>
 
           <div className="w-full flex justify-center mt-1">
-            <input type="file" onChange={handleFileSelect} />
+            <input type="file" onChange={handleFileSelect}/>
           </div>
         </div>
       )}
     </div>
   )
-};
+}
 
 export default MakePhotoTalk;

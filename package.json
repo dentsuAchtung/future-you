@@ -20,6 +20,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "replicate": "^0.12.0",
+    "sass": "^1.62.1",
     "sharp": "^0.32.1"
   },
   "devDependencies": {
