@@ -1,6 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+html,
+body {
+
+  min-height: 100vh;
+}
 
 input {
   @apply border;
@@ -16,7 +21,9 @@ input {
 }
 
 .button {
-  @apply bg-black text-white rounded-r-md inline-block px-5 py-3;
+  @apply bg-white text-black rounded-md inline-block px-5 py-4 w-full text-center;
+  text-transform: uppercase;
+  font-size: 20px;
 }
 
 .image-wrapper {

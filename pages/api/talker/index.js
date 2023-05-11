@@ -34,6 +34,7 @@ export default async function handler(req, res) {
       "The REPLICATE_API_TOKEN environment variable is not set. See README.md for instructions on how to set it."
     );
   }
+
   const imageResponse = await axios.get(req.body.image, { responseType: 'arraybuffer' });
   const buffer = await sharp(imageResponse.data).resize(256, 256, {
     fit: 'cover',
